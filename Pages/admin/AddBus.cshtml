@@ -1,0 +1,120 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.AddBusModel
+@{
+    ViewData["Title"] = "Add New Bus";
+}
+
+<h2>Add New Bus</h2>
+
+<form id="addBusForm" onsubmit="addBus(event)">
+    <div class="mb-3">
+        <label for="name" class="form-label">Bus Name</label>
+        <input type="text" id="name" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label for="deckerType" class="form-label">Decker Type</label>
+        <select id="deckerType" class="form-control" required>
+            <option value="SingleDecker">Select Decker Type</option>
+            <option value="SingleDecker">Single Decker</option>
+            <option value="DoubleDecker">Double Decker</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="busModel" class="form-label">Bus Model</label>
+        <input type="text" id="busModel" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label for="numberOfExtraSeats" class="form-label">Number of Extra Seats</label>
+        <input type="number" id="numberOfExtraSeats" class="form-control" min="0" required />
+    </div>
+    <div class="mb-3">
+        <label for="numberOfRowInCenter" class="form-label">Number of Rows in Center</label>
+        <input type="number" id="numberOfRowInCenter" class="form-control" min="0" required />
+    </div>
+    <div class="mb-3">
+        <label for="numberOfSeatsInCenterleft" class="form-label">Seats in Center Left (per row)</label>
+        <input type="number" id="numberOfSeatsInCenterleft" class="form-control" min="0" max="2" required />
+    </div>
+    <div class="mb-3">
+        <label for="numberOfSeatsInCenterRight" class="form-label">Seats in Center Right (per row)</label>
+        <input type="number" id="numberOfSeatsInCenterRight" class="form-control" min="0" max="3" required />
+    </div>
+    <div class="mb-3">
+        <label for="numberOfSeatsInLastSeries" class="form-label">Seats in Last Row</label>
+        <input type="number" id="numberOfSeatsInLastSeries" class="form-control" min="0" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Bus</button>
+</form>
+
+<style>
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        max-width: 400px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<script>
+    async function addBus(event) {
+        event.preventDefault(); // Prevent form submission
+
+
+        const deckerTypeValue = document.getElementById("deckerType").value;
+        const deckerTypeEnum = deckerTypeValue === "SingleDecker" ? 1 : 2;
+
+        const busData = {
+            name: document.getElementById("name").value,
+            deckerType: deckerTypeEnum,
+            busModel: document.getElementById("busModel").value,
+            numberOfExtraSeats: parseInt(document.getElementById("numberOfExtraSeats").value),
+            numberOfRowInCenter: parseInt(document.getElementById("numberOfRowInCenter").value),
+            numberOfSeatsInCenterleft: parseInt(document.getElementById("numberOfSeatsInCenterleft").value),
+            numberOfSeatsInCenterRight: parseInt(document.getElementById("numberOfSeatsInCenterRight").value),
+            numberOfSeatsInLastSeries: parseInt(document.getElementById("numberOfSeatsInLastSeries").value)
+        };
+
+        // Basic validation
+        if (!busData.name || isNaN(busData.deckerType) || !busData.busModel ||
+            isNaN(busData.numberOfExtraSeats) || isNaN(busData.numberOfRowInCenter) ||
+            isNaN(busData.numberOfSeatsInCenterleft) || isNaN(busData.numberOfSeatsInCenterRight) ||
+            isNaN(busData.numberOfSeatsInLastSeries)) {
+            alert("Please fill in all fields correctly.");
+            return;
+        }
+
+
+
+        try {
+            const response = await fetch("http://localhost:5134/api/bus/addbus", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(busData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert("Bus added successfully! Bus ID: " + result.id);
+                document.getElementById("addBusForm").reset(); // Clear form
+            } else {
+                const errorData = await response.json();
+                alert("Failed to add bus: " + (errorData.message || "Unknown error"));
+            }
+        } catch (error) {
+            console.error("Error adding bus:", error);
+            alert("An error occurred while adding the bus.");
+        }
+    }
+</script>

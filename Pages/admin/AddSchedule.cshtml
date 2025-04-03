@@ -1,0 +1,60 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.Admin.AddScheduleModel
+@{
+    ViewData["Title"] = "Add Bus Schedule";
+}
+
+<h2>Add Bus Schedule</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="BusId" class="form-label">Select Bus</label>
+        <select asp-for="NewScheduleBus.BusId" class="form-control" id="busSelect" onchange="updateBusName()">
+            @foreach (var bus in Model.AvailableBuses)
+            {
+                <option value="@bus.Id" data-name="@bus.Name">@bus.Name</option>
+            }
+        </select>
+        <input asp-for="NewScheduleBus.Name" type="hidden" id="busName" />
+    </div>
+
+    <div class="mb-3">
+        <label for="StartingAt" class="form-label">Starting Time</label>
+        <input asp-for="NewScheduleBus.StartingAt" class="form-control" type="time" step="1" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="ScheduledDate" class="form-label">Scheduled Date</label>
+        <input asp-for="NewScheduleBus.ScheduledDate" type="date" class="form-control"
+            value="@DateTime.Now.ToString("MM-dd-yyyy")" required />
+    </div>
+    <div class="mb-3">
+        <label for="StartingPlace" class="form-label">Starting Place</label>
+        <input asp-for="NewScheduleBus.StartingPlace" type="text" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="TheTownBusIsNow" class="form-label">Bus Location</label>
+        <select asp-for="NewScheduleBus.theTownBusIsNow" class="form-control">
+            @foreach (var location in Enum.GetValues(typeof(JKKNIUBusBookingSystem.Entites.TheTownBusIsNow)))
+            {
+                <option value="@((int)location)">@location</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Schedule</button>
+</form>
+<script>
+    function updateBusName() {
+        var select = document.getElementById("busSelect");
+        var selectedOption = select.options[select.selectedIndex];
+        var busName = selectedOption.getAttribute("data-name");
+        document.getElementById("busName").value = busName;
+    }
+
+    // Set initial value on page load
+    window.onload = function () {
+        updateBusName();
+    };
+</script>

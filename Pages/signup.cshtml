@@ -1,0 +1,65 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.SignupModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Name">Full Name</label>
+        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
+    </div>
+
+    <div class="form-group">
+        <label for="RegistrationNumber">Registration Number</label>
+        <input type="text" id="RegistrationNumber" name="RegistrationNumber" class="form-control" value="@Model.RegistrationNumber" required />
+    </div>
+
+    <div class="form-group">
+        <label for="RollNumber">Roll Number</label>
+        <input type="text" id="RollNumber" name="RollNumber" class="form-control" value="@Model.RollNumber" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Mail">Email</label>
+        <input type="email" id="Mail" name="Mail" class="form-control" value="@Model.Mail" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Phone">Phone</label>
+        <input type="text" id="Phone" name="Phone" class="form-control" value="@Model.Phone" required />
+    </div>
+
+    <div class="form-group">
+        <label for="DepartmentName">Department</label>
+        <input type="text" id="DepartmentName" name="DepartmentName" class="form-control" value="@Model.DepartmentName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Session">Session</label>
+        <input type="text" id="Session" name="Session" class="form-control" value="@Model.Session" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" id="Password" name="Password" class="form-control" value="@Model.Password" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ConfirmPassword">Confirm Password</label>
+        <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </div>
+
+    @if (Model.Message != null)
+    {
+        <div class="alert alert-danger">
+            @Model.Message
+        </div>
+    }
+</form>

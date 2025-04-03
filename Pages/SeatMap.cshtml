@@ -1,0 +1,355 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.SeatMapModel
+@{
+    ViewData["Title"] = "Bus Seat Map";
+}
+
+<h2>Bus Seats</h2>
+
+<div id="floatingBadge" class="floating-badge" style="display: none;">
+    You have a seat booked! Click to cancel.
+</div>
+
+<div id="seatMap" class="seat-map">
+    <div id="extraSeats" class="seat-section">
+        <h3>Extra Seats</h3>
+        <div class="seat-container horizontal"></div>
+    </div>
+    <div id="centerSeats" class="seat-section">
+        <h3>Center Rows</h3>
+        <div class="center-container">
+            <div class="left-seats">
+                <h4>Left Side</h4>
+                <div class="seat-container" id="leftSeats"></div>
+            </div>
+            <div class="right-seats">
+                <h4>Right Side</h4>
+                <div class="seat-container" id="rightSeats"></div>
+            </div>
+        </div>
+    </div>
+    <div id="lastSeats" class="seat-section">
+        <h3>Last Row</h3>
+        <div class="seat-container horizontal"></div>
+    </div>
+</div>
+
+<style>
+    .seat-map {
+        max-width: 800px;
+        margin: 20px auto;
+    }
+
+    .seat-section {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .center-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .left-seats,
+    .right-seats {
+        width: 48%;
+    }
+
+    .seat-container {
+        display: block;
+    }
+
+    .seat-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .seat-container.horizontal {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .seat {
+        width: 70px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border: 2px solid #333;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #28a745;
+        /* Green for available */
+        color: white;
+        font-weight: bold;
+    }
+
+    .seat.booked {
+        background-color: #dc3545;
+        /* Red for booked */
+        cursor: not-allowed;
+    }
+
+    .seat:hover:not(.booked) {
+        background-color: #218838;
+        /* Darker green on hover */
+    }
+
+    .floating-badge {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #ff9800;
+        /* Orange for visibility */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .floating-badge:hover {
+        background-color: #e68a00;
+        /* Darker orange on hover */
+    }
+</style>
+
+<script>
+    let bookedSeat = null;
+    let busDetails = null;
+    async function checkBookingStatus() {
+        const userId = "@Model.UserId";
+        if (!userId || !isValidGuid(userId)) {
+            alert("Please enter a valid User ID (GUID).");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5134/api/busbooking/checkseat?userId=${userId}`);
+            const data = await response.json();
+            bookedSeat = data.seat;
+            const badge = document.getElementById("floatingBadge");
+
+            if (response.ok) {
+                badge.style.display = "block";
+                badge.innerHTML=`You have ${bookedSeat.seatName} seat in ${data.busName}.Click to cancel.`;
+            } else {
+                badge.style.display = "none";
+                bookedSeat = null;
+            }
+        } catch (error) {
+            console.error("Error checking booking status:", error);
+        }
+    }
+
+
+
+    async function unbookSeat() {
+        const userId = "@Model.UserId";
+        console.log(bookedSeat);
+        if (!bookedSeat) {
+            alert("No booked seat found to cancel.");
+            return;
+        }
+
+        const unbookRequest = {
+            scheduleId: "@Model.ScheduleId",
+            seatName: bookedSeat.seatName,
+            bookedBy: userId
+        };
+
+        try {
+            const response = await fetch("http://localhost:5134/api/busbooking/unbookseat", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(unbookRequest)
+            });
+
+            if (response.ok) {
+                alert("Seat unbooked successfully!");
+                document.getElementById("floatingBadge").style.display = "none";
+                loadSeats(); // Refresh seat map
+            } else {
+                const errorData = await response.json();
+                alert(errorData.message || "Failed to unbook seat.");
+            }
+        } catch (error) {
+            console.error("Error unbooking seat:", error);
+            alert("An error occurred while unbooking the seat.");
+        }
+    }
+
+    async function loadSeats() {
+        const scheduleId = "@Model.ScheduleId";
+        if (!scheduleId || scheduleId === "00000000-0000-0000-0000-000000000000") {
+            alert("No valid Schedule ID provided.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5134/api/busbooking/getseat?ScheduleId=${scheduleId}`);
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            const seats = await response.json();
+            renderSeatMap(seats);
+        } catch (error) {
+            console.error("Error fetching seats:", error);
+            alert("Failed to load seats.");
+        }
+    }
+
+    async function getBusDetail() {
+        const scheduleId = "@Model.ScheduleId";
+        if (!scheduleId || scheduleId === "00000000-0000-0000-0000-000000000000") {
+            alert("No valid Schedule ID provided.");
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:5134/api/bus/busdetails?scheduleId=${scheduleId}`);
+            if (!response.ok) {
+                throw new error(`Api error : ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data.busDetail);
+            busDetails = data.busDetail;
+        }
+        catch (error) {
+            console.error("Error fetching bus details:", error);
+        }
+    }
+
+    async function renderSeatMap(seats) {
+        const extraSeatsContainer = document.querySelector("#extraSeats .seat-container");
+        const leftSeatsContainer = document.querySelector("#leftSeats");
+        const rightSeatsContainer = document.querySelector("#rightSeats");
+        const lastSeatsContainer = document.querySelector("#lastSeats .seat-container");
+
+        extraSeatsContainer.innerHTML = "";
+        leftSeatsContainer.innerHTML = "";
+        rightSeatsContainer.innerHTML = "";
+        lastSeatsContainer.innerHTML = "";
+
+        await getBusDetail();
+        console.log(busDetails);
+        // Group center seats by row
+        const centerSeats = seats.filter(s => !s.seatName.startsWith("Ex-") && !s.seatName.startsWith("Last-"));
+        const rows = {};
+        centerSeats.forEach(seat => {
+            const [row, num] = seat.seatName.split("-");
+            if (!rows[row]) rows[row] = [];
+            rows[row].push(seat);
+        });
+
+        // Render extra seats
+        seats.filter(s => s.seatName.startsWith("Ex-")).forEach(seat => {
+            const seatElement = createSeatElement(seat);
+            extraSeatsContainer.appendChild(seatElement);
+        });
+
+        // Render center rows
+        Object.keys(rows).forEach(row => {
+            const leftRowDiv = document.createElement("div");
+            leftRowDiv.className = "seat-row";
+            const rightRowDiv = document.createElement("div");
+            rightRowDiv.className = "seat-row";
+
+            rows[row].forEach(seat => {
+                const seatElement = createSeatElement(seat);
+                const seatNumber = parseInt(seat.seatName.split("-")[1]);
+                if (seatNumber <= busDetails.numberOfSeatsInCenterleft) {
+                    leftRowDiv.appendChild(seatElement); // Left side: 1-2
+                } else {
+                    rightRowDiv.appendChild(seatElement); // Right side: 3-5
+                }
+            });
+
+            // Only append if there are seats in the row
+            if (leftRowDiv.children.length > 0) {
+                leftSeatsContainer.appendChild(leftRowDiv);
+            }
+            if (rightRowDiv.children.length > 0) {
+                rightSeatsContainer.appendChild(rightRowDiv);
+            }
+        });
+
+        // Render last row
+        seats.filter(s => s.seatName.startsWith("Last-")).forEach(seat => {
+            const seatElement = createSeatElement(seat);
+            lastSeatsContainer.appendChild(seatElement);
+        });
+    }
+
+    function createSeatElement(seat) {
+        const seatElement = document.createElement("div");
+        seatElement.className = `seat ${seat.isBooked ? "booked" : ""}`;
+        seatElement.textContent = seat.seatName;
+        seatElement.title = seat.isBooked ? "Booked" : "Available";
+
+        if (!seat.isBooked) {
+            seatElement.addEventListener("click", () => {
+                if (confirm(`Are you sure you want to book seat ${seat.seatName}?`)) {
+                    bookSeat(seat.seatName);
+                }
+            });
+        }
+
+        return seatElement;
+    }
+
+    async function bookSeat(seatName) {
+        const scheduleId = "@Model.ScheduleId";
+        const bookedBy = "@Model.UserId";
+
+        if (!bookedBy) {
+            alert("Your ID is missing!");
+            return;
+        }
+
+        const bookingRequest = {
+            ScheduleId: scheduleId,
+            SeatName: seatName,
+            BookedBy: bookedBy
+        };
+
+        try {
+            const response = await fetch("http://localhost:5134/api/busbooking/bookseat", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bookingRequest)
+            });
+
+            if (response.ok) {
+                alert("Seat booked successfully!");
+                loadSeats(); // Refresh the seat map
+                checkBookingStatus();
+            } else {
+                const errorData = await response.json();
+                alert(errorData.message || "Failed to book seat.");
+            }
+        } catch (error) {
+            console.error("Error booking seat:", error);
+            alert("An error occurred while booking the seat.");
+        }
+    }
+
+    function isValidGuid(str) {
+        const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+        return guidRegex.test(str);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        checkBookingStatus();
+        loadSeats();
+        document.getElementById("floatingBadge").addEventListener("click", unbookSeat);
+    });
+</script>

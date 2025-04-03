@@ -1,0 +1,88 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.AvailableBusesModel
+@{
+    ViewData["Title"] = "Available Bus Schedules";
+}
+
+<h2>Available Buses</h2>
+
+@* <form method="post">
+    <div class="mb-3">
+        <label asp-for="QueryParameters.CurrentTime" class="form-label">Current Time</label>
+        <input asp-for="QueryParameters.CurrentTime" class="form-control" type="time" step="1" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="QueryParameters.CurrentDate" class="form-label">Current Date</label>
+        <input asp-for="QueryParameters.CurrentDate" class="form-control" type="date" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="QueryParameters.StartingPlace" class="form-label">Starting Place</label>
+        <input asp-for="QueryParameters.StartingPlace" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form> *@
+
+@if (Model.AvailableBuses.Any())
+{
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Bus Name</th>
+                <th>Starting At</th>
+                <th>Scheduled Date</th>
+                <th>Starting Place</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bus in Model.AvailableBuses)
+            {
+                <tr class="clickable-row" data-schedule-id="@bus.ScheduleId">
+                    <td>@bus.Name</td>
+                    <td>@bus.StartingAt</td>
+                    <td>@bus.ScheduledDate</td>
+                    <td>@bus.StartingPlace</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (ModelState.IsValid && Model.AvailableBuses.Count == 0)
+{
+    <p>No available buses found.</p>
+}
+
+@if (!ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+<style>
+    .clickable-row {
+        cursor: pointer;
+    }
+
+    .clickable-row:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(row => {
+            row.addEventListener("click", function () {
+                const scheduleId = this.getAttribute("data-schedule-id");
+                window.location.href = `/SeatMap?scheduleId=${scheduleId}`;
+            });
+        });
+    });
+</script>
