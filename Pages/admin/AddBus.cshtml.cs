@@ -9,8 +9,12 @@ namespace JKKNIUBusBookingSystem.Pages
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToPage("/login");
+                return RedirectToPage("/Login");
             }
+            if(!User.IsInRole("Admin")){
+                return RedirectToPage("/AvailableBuses");
+            }
+            
             return Page();
         }
     }

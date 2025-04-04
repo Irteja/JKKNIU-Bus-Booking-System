@@ -24,6 +24,10 @@ namespace JKKNIUBusBookingSystem.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Login");
+            }
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -43,8 +47,8 @@ namespace JKKNIUBusBookingSystem.Pages
 
                 // Normalize TimeSpan to include seconds if missing
                 QueryParameters.CurrentTime = TimeSpan.Parse(DateTime.Now.ToString("HH\\:mm\\:ss"));
-                QueryParameters.CurrentDate=DateOnly.Parse(DateOnly.FromDateTime(DateTime.Now).ToString("MM-dd-yyyy"));
-                Console.WriteLine("Current Time ->"+QueryParameters.CurrentTime);
+                QueryParameters.CurrentDate = DateOnly.Parse(DateOnly.FromDateTime(DateTime.Now).ToString("MM-dd-yyyy"));
+                Console.WriteLine("Current Time ->" + QueryParameters.CurrentTime);
                 var json = JsonSerializer.Serialize(QueryParameters);
                 Console.WriteLine("Request JSON: " + json);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");

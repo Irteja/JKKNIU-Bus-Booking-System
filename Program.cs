@@ -6,7 +6,7 @@ using JKKNIUBusBookingSystem.db;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 
@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -54,7 +54,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication(); // Add this before UseAuthorization
+app.UseAuthentication(); 
 app.UseAuthorization();
 app.MapControllers();
 app.UseAuthorization();

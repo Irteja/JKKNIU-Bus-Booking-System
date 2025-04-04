@@ -338,3 +338,4 @@
 /media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
 /media/irteja/New Volume/web project/JKKNIUBusBookingSystem/bin/Debug/net8.0/BCrypt.Net-Next.dll
 /media/irteja/New Volume/web project/JKKNIUBusBookingSystem/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/obj/Debug/net8.0/JKKNIUBusBookingSystem.sourcelink.json

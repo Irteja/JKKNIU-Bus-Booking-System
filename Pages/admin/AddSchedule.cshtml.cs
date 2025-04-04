@@ -25,6 +25,14 @@ namespace JKKNIUBusBookingSystem.Pages.Admin
 
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Login");
+            }
+            if (!User.IsInRole("Admin"))
+            {
+                return RedirectToPage("/AvailableBuses");
+            }
             try
             {
                 using var client = new HttpClient();
@@ -52,6 +60,14 @@ namespace JKKNIUBusBookingSystem.Pages.Admin
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Login");
+            }
+            if (!User.IsInRole("Admin"))
+            {
+                return RedirectToPage("/AvailableBuses");
+            }
             if (!ModelState.IsValid)
             {
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
