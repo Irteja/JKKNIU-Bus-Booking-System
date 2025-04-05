@@ -8,19 +8,20 @@ using JKKNIUBusBookingSystem.Entites;
 
 namespace JKKNIUBusBookingSystem.Pages;
 
-public class SeatMapModel : PageModel
-{
-    public Guid ScheduleId { get; set; }
-    public Guid UserId{get;set;}
 
-    public IActionResult OnGet(Guid scheduleId)
+
+public class BookingHistoryModel : PageModel
+{
+    public Guid UserId { get; set; }
+
+    public IActionResult OnGet()
     {
-        if(!User.Identity.IsAuthenticated){
+        if (!User.Identity.IsAuthenticated || User==null)
+        {
             return RedirectToPage("/login");
         }
-        ScheduleId = scheduleId;
-        UserId=Guid.Parse(User.FindFirst("id").Value);
-        Console.WriteLine($"User id is {UserId}");
+        UserId = Guid.Parse(User.FindFirst("id").Value);
+        // Console.WriteLine($"User id is {UserId}");
         return Page();
     }
 }

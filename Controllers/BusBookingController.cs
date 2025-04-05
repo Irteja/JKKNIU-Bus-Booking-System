@@ -158,12 +158,43 @@ public class BusBookingController : ControllerBase
             var exists = await context.ScheduleBusSeats.FirstOrDefaultAsync(seats =>
             seats.BookedBy == userId &&
             seats.ScheduleId == bus.ScheduleId
-            
+
             );
             // Console.WriteLine("incoming");
-            if (exists != null) return Ok(new { message = "You have a seat already!",seat=exists,busName=bus.Name});
+            if (exists != null) return Ok(new { message = "You have a seat already!", seat = exists, busName = bus.Name });
         }
         return NotFound(new { message = "No seat booked by the user" });
+    }
+
+    [HttpGet("bookinghistory")]
+    public async Task<IEnumerable> GetUserBookingHistory([FromQuery] Guid userId)
+    {
+        var finalBookingList=await (from seats in context.ScheduleBusSeats
+        join scheduleBus in context.ScheduleBuses
+        on seats.ScheduleId equals scheduleBus.ScheduleId
+        where seats.BookedBy==userId
+        select new SeatBookingHistoryDtos{
+            busName=scheduleBus.Name,
+            seatName=seats.SeatName,
+            scheduledDate=scheduleBus.ScheduledDate,
+            startingAt=scheduleBus.StartingAt,
+            startingPlace=scheduleBus.StartingPlace,
+            theTownBusWas=scheduleBus.theTownBusIsNow
+        }).ToListAsync();
+        return finalBookingList;
+    }
+
+    private async Task<IEnumerable<GettingBusDtos>> GetAllBusList()
+    {
+        List<ScheduleBus>? Allbuses = await context.ScheduleBuses.ToListAsync();
+
+        var finalBuses = Allbuses.Select(bus => new GettingBusDtos
+        {
+            Id = bus.ScheduleId,
+            Name = bus.Name
+        });
+
+        return finalBuses;
     }
 
     private async Task<IEnumerable<ScheduleBus>> GetCurrentBusList()

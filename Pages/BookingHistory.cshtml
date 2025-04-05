@@ -1,0 +1,119 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.BookingHistoryModel
+@{
+    ViewData["Title"] = "Booking History";
+}
+
+<h2>Booking History</h2>
+
+
+<table class="table table-bordered" id="bookingTable" style="display: none;">
+    <thead>
+        <tr>
+            <th>Bus Name</th>
+            <th>Seat Name</th>
+            <th>Scheduled Date</th>
+            <th>Starting At</th>
+            <th>Starting Place</th>
+            <th>Town Bus Was</th>
+        </tr>
+    </thead>
+    <tbody id="bookingTableBody"></tbody>
+</table>
+
+<style>
+    .table {
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+
+    .table th,
+    .table td {
+        text-align: center;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        max-width: 400px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<script>
+    async function loadBookingHistory() {
+        const userId = "@Model.UserId";
+        if (!userId || !isValidGuid(userId)) {
+            alert("Please enter a valid User ID (GUID).");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5134/api/busbooking/bookinghistory?userId=${userId}`);
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            const bookings = await response.json();
+            renderBookingTable(bookings);
+        } catch (error) {
+            console.error("Error fetching booking history:", error);
+            alert("Failed to load booking history.");
+        }
+    }
+
+    function renderBookingTable(bookings) {
+        const tbody = document.getElementById("bookingTableBody");
+        const table = document.getElementById("bookingTable");
+        tbody.innerHTML = ""; // Clear existing rows
+
+        if (bookings.length === 0) {
+            table.style.display = "none";
+            alert("No booking history found for this user.");
+            return;
+        }
+
+        bookings.forEach(booking => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${booking.busName}</td>
+                <td>${booking.seatName}</td>
+                <td>${formatDate(booking.scheduledDate)}</td>
+                <td>${formatTime(booking.startingAt)}</td>
+                <td>${booking.startingPlace}</td>
+                <td>${booking.theTownBusWas}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        table.style.display = "table"; // Show table
+    }
+
+    function formatDate(dateString) {
+        // Assuming scheduledDate is in "YYYY-MM-DD" format from DateOnly
+        const [year, month, day] = dateString.split("-");
+        return `${day}-${month}-${year}`; // Adjust format as needed
+    }
+
+    function formatTime(timeString) {
+        // Assuming startingAt is in "HH:mm:ss" format from TimeSpan
+        return timeString.split(":").slice(0, 2).join(":"); // Returns HH:mm
+    }
+
+    function isValidGuid(str) {
+        const guidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+        return guidRegex.test(str);
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        loadBookingHistory()
+    });
+</script>
