@@ -20,14 +20,32 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/AvailableBuses">Available Buses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/BookingHistory">Booking History</a>
-                        </li>
-                    </ul>
+                    @if (User.IsInRole("Student"))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/AvailableBuses">Available Buses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/BookingHistory">Booking History</a>
+                            </li>
+                        </ul>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/admin/AddBus">Add Buses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/admin/AddSchedule">Add Schedule</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/admin/DeleteSchedule">Delete Schedule</a>
+                            </li>
+
+                        </ul>
+                    }
 
                     @if (User.Identity.IsAuthenticated)
                     {

@@ -6,6 +6,11 @@
 
 <h2>Add Bus Schedule</h2>
 
+@if (ViewData["Message"] != null)
+{
+    <script>alert('@ViewData["Message"]');</script>
+}
+
 <form method="post">
     <div class="mb-3">
         <label for="BusId" class="form-label">Select Bus</label>

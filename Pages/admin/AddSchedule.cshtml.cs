@@ -83,19 +83,20 @@ namespace JKKNIUBusBookingSystem.Pages.Admin
             // Console.WriteLine($"Request JSON: {json}");
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await client.PostAsync("http://localhost:5134/api/schedulebus/addschedule", content);
-            Console.WriteLine($"API Response Status: {response.StatusCode}");
+
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToPage("/availablebuses");
+                ViewData["Message"] = "New Schedule Bus Added.";
             }
             else
             {
+                ViewData["Message"] = "Failed to add schedule.";
                 var errorContent = await response.Content.ReadAsStringAsync();
                 // Console.WriteLine($"API Error: {response.StatusCode} - {errorContent}");
                 ModelState.AddModelError("", $"Failed to add schedule: {errorContent}");
-                return Page();
             }
+            return RedirectToPage("/admin/AddSchedule");
         }
     }
 }
