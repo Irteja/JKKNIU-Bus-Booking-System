@@ -9,11 +9,11 @@ using System.Text.Json.Serialization;
 
 namespace JKKNIUBusBookingSystem.Pages
 {
-    public class AvailableBusesModel : PageModel
+    public class DeleteScheduleModel : PageModel
     {
         private readonly HttpClient _httpClient;
 
-        public AvailableBusesModel(HttpClient httpClient)
+        public DeleteScheduleModel(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -29,9 +29,9 @@ namespace JKKNIUBusBookingSystem.Pages
             {
                 return RedirectToPage("/Login");
             }
-            if (!ModelState.IsValid)
+            if (!User.IsInRole("Admin"))
             {
-                return Page();
+                return RedirectToPage("/AvailableBuses");
             }
 
             try
@@ -47,16 +47,16 @@ namespace JKKNIUBusBookingSystem.Pages
                 }
                 QueryParameters.CurrentTime = TimeSpan.Parse(DateTime.Now.ToString("HH\\:mm\\:ss"));
                 QueryParameters.CurrentDate = DateOnly.Parse(DateOnly.FromDateTime(DateTime.Now).ToString("MM-dd-yyyy"));
-                Console.WriteLine("Current Time ->" + QueryParameters.CurrentTime);
+                
                 var json = JsonSerializer.Serialize(QueryParameters);
-                Console.WriteLine("Request JSON: " + json);
+                
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("http://localhost:5134/api/schedulebus/schedulebuses", content);
 
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    AvailableBuses = JsonSerializer.Deserialize<List<ScheduleBusDtos>>(jsonString, new JsonSerializerOptions
+                                        AvailableBuses = JsonSerializer.Deserialize<List<ScheduleBusDtos>>(jsonString, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                         Converters = { new JsonStringEnumConverter() }

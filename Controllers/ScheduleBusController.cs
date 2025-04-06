@@ -31,7 +31,7 @@ public class ScheduleBusController : ControllerBase
             StartingAt = bus.StartingAt,
             StartingPlace = bus.StartingPlace,
             ScheduledDate = bus.ScheduledDate,
-            theTownBusIsNow=bus.theTownBusIsNow
+            theTownBusIsNow = bus.theTownBusIsNow
         };
         await context.ScheduleBuses.AddAsync(newScheduleBus);
         await context.SaveChangesAsync();
@@ -45,6 +45,43 @@ public class ScheduleBusController : ControllerBase
         return Ok("Added Successfully");
     }
 
+    [HttpDelete("schedule")]
+    public async Task<IActionResult> DeleteScheduleBus([FromQuery] Guid scheduleId)
+    {
+        using var transaction = await context.Database.BeginTransactionAsync();
+        try
+        {
+            var scheduleBus = await context.ScheduleBuses.FirstOrDefaultAsync(bus =>
+                                bus.ScheduleId == scheduleId
+                                );
+            Console.WriteLine("Came this far->" + scheduleId);
+            if (scheduleBus != null)
+            {
+
+                var scheduleBusSeats = await context.ScheduleBusSeats.Where(seat =>
+                                        seat.ScheduleId == scheduleId
+                                        ).ToListAsync();
+
+                if (scheduleBusSeats.Any())
+                {
+                    context.ScheduleBusSeats.RemoveRange(scheduleBusSeats);
+                }
+
+
+                context.ScheduleBuses.Remove(scheduleBus);
+
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            return Ok(new { message = "The schedule Bus is deleted!" });
+
+        }
+        catch
+        {
+            return StatusCode(500, new { message = "Internal server error!Try again!" });
+        }
+    }
     private async Task<List<ScheduleBusSeats>> MakeBusSeatList(ScheduleBus scheduledBus)
     {
         var mainBus = await context.Buses.Where(b => b.Id == scheduledBus.BusId).ToListAsync();
@@ -97,9 +134,9 @@ public class ScheduleBusController : ControllerBase
             StartingAt = bus.StartingAt,
             ScheduledDate = bus.ScheduledDate,
             StartingPlace = bus.StartingPlace,
-            theTownBusIsNow=bus.theTownBusIsNow
+            theTownBusIsNow = bus.theTownBusIsNow
         });
-        
+
 
         return finalBuses;
     }

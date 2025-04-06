@@ -329,7 +329,7 @@
 
             if (response.ok) {
                 alert("Seat booked successfully!");
-                loadSeats(); // Refresh the seat map
+                loadSeats();
                 checkBookingStatus();
             } else {
                 const errorData = await response.json();

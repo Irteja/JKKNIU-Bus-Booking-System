@@ -1,10 +1,11 @@
 @page
-@model JKKNIUBusBookingSystem.Pages.AvailableBusesModel
+@model JKKNIUBusBookingSystem.Pages.DeleteScheduleModel
 @{
     ViewData["Title"] = "Available Bus Schedules";
 }
 
 <h2>Available Buses</h2>
+
 
 @if (Model.AvailableBuses.Any())
 {
@@ -21,7 +22,7 @@
         <tbody>
             @foreach (var bus in Model.AvailableBuses)
             {
-                <tr class="clickable-row" data-schedule-id="@bus.ScheduleId">
+                <tr class="clickable-row" data-bus-name="@bus.Name" data-schedule-id="@bus.ScheduleId">
                     <td>@bus.Name</td>
                     <td>@bus.StartingAt</td>
                     <td>@bus.ScheduledDate</td>
@@ -59,10 +60,28 @@ else if (ModelState.IsValid && Model.AvailableBuses.Count == 0)
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const rows = document.querySelectorAll(".clickable-row");
+
         rows.forEach(row => {
-            row.addEventListener("click", function () {
+            row.addEventListener("click", async function () {
                 const scheduleId = this.getAttribute("data-schedule-id");
-                window.location.href = `/SeatMap?scheduleId=${scheduleId}`;
+                const busName = this.getAttribute("data-bus-name");
+                if (confirm(`Are you sure you want to delete schedule for ${busName}?`)) {
+                    try {
+                        const response = await fetch(`http://localhost:5134/api/schedulebus/schedule?scheduleId=${scheduleId}`, {
+                            method: "DELETE"
+                        });
+
+                        if (response.ok) {
+                            alert("Schedule removed successfully");
+                            window.location.reload();
+                        } else {
+                            const data = await response.json();
+                            alert(data.message || "Something went wrong!");
+                        }
+                    } catch (error) {
+                        alert("Network error: " + error.message);
+                    }
+                }
             });
         });
     });
