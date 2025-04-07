@@ -1,0 +1,91 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.BusHistoryModel
+@{
+    ViewData["Title"] = "Bus History";
+}
+
+<h2>Bus History</h2>
+
+<table class="table table-bordered" id="busTable" style="display: none;">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Starting At</th>
+            <th>Scheduled Date</th>
+            <th>Starting Place</th>
+            <th>Town Bus Is Now</th>
+        </tr>
+    </thead>
+    <tbody id="busTableBody"></tbody>
+</table>
+
+<style>
+    .table {
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+    .table th, .table td {
+        text-align: center;
+    }
+</style>
+
+<script>
+    async function loadBusHistory() {
+        try {
+            const response = await fetch("http://localhost:5134/api/schedulebus/history");
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            const data = await response.json();
+            renderBusTable(data.list); // Extract the 'list' property from the response
+        } catch (error) {
+            console.error("Error fetching bus history:", error);
+            alert("Failed to load bus history: " + error.message);
+        }
+    }
+
+    function renderBusTable(buses) {
+        const tbody = document.getElementById("busTableBody");
+        const table = document.getElementById("busTable");
+        tbody.innerHTML = ""; // Clear existing rows
+
+        if (!buses || buses.length === 0) {
+            table.style.display = "none";
+            alert("No bus history found.");
+            return;
+        }
+
+        buses.forEach(bus => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${bus.name || "N/A"}</td>
+                <td>${formatTime(bus.startingAt)}</td>
+                <td>${formatDate(bus.scheduledDate)}</td>
+                <td>${bus.startingPlace || "N/A"}</td>
+                <td>${bus.theTownBusIsNow || "N/A"}</td>
+            `;
+            row.addEventListener("click",function(){
+                window.location.href=`/admin/SeatDetails?ScheduleId=${bus.scheduleId}`
+            });
+            tbody.appendChild(row);
+        });
+
+        table.style.display = "table"; // Show table
+    }
+
+    function formatDate(dateString) {
+        // Assuming scheduledDate is in "YYYY-MM-DD" format from DateOnly
+        const [year, month, day] = dateString.split("-");
+        return `${day}-${month}-${year}`; // e.g., "06-04-2025"
+    }
+
+    function formatTime(timeString) {
+        // Assuming startingAt is in "HH:mm:ss" format from TimeSpan
+        return timeString.split(":").slice(0, 2).join(":"); // e.g., "14:30"
+    }
+
+    // Load data when the page is fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        loadBusHistory();
+    });
+</script>

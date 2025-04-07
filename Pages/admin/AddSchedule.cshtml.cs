@@ -42,7 +42,7 @@ namespace JKKNIUBusBookingSystem.Pages.Admin
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
                     AvailableBuses = JsonSerializer.Deserialize<List<GettingBusDtos>>(jsonString,
-                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true })??new List<GettingBusDtos>();
                 }
                 else
                 {

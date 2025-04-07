@@ -169,32 +169,48 @@ public class BusBookingController : ControllerBase
     [HttpGet("bookinghistory")]
     public async Task<IEnumerable> GetUserBookingHistory([FromQuery] Guid userId)
     {
-        var finalBookingList=await (from seats in context.ScheduleBusSeats
-        join scheduleBus in context.ScheduleBuses
-        on seats.ScheduleId equals scheduleBus.ScheduleId
-        where seats.BookedBy==userId
-        select new SeatBookingHistoryDtos{
-            busName=scheduleBus.Name,
-            seatName=seats.SeatName,
-            scheduledDate=scheduleBus.ScheduledDate,
-            startingAt=scheduleBus.StartingAt,
-            startingPlace=scheduleBus.StartingPlace,
-            theTownBusWas=scheduleBus.theTownBusIsNow
-        }).ToListAsync();
+        var finalBookingList = await (from seats in context.ScheduleBusSeats
+                                      join scheduleBus in context.ScheduleBuses
+                                      on seats.ScheduleId equals scheduleBus.ScheduleId
+                                      where seats.BookedBy == userId
+                                      select new SeatBookingHistoryDtos
+                                      {
+                                          busName = scheduleBus.Name,
+                                          seatName = seats.SeatName,
+                                          scheduledDate = scheduleBus.ScheduledDate,
+                                          startingAt = scheduleBus.StartingAt,
+                                          startingPlace = scheduleBus.StartingPlace,
+                                          theTownBusWas = scheduleBus.theTownBusIsNow
+                                      }).ToListAsync();
         return finalBookingList;
     }
-
-    private async Task<IEnumerable<GettingBusDtos>> GetAllBusList()
+    [HttpGet("seatlistdetailforadmin")]
+    public async Task<ActionResult<IEnumerable<SeatDetailsForAdminDtos>>> GetSeatListDetailForAdmin([FromQuery] Guid scheduleId)
     {
-        List<ScheduleBus>? Allbuses = await context.ScheduleBuses.ToListAsync();
-
-        var finalBuses = Allbuses.Select(bus => new GettingBusDtos
+        // Console.WriteLine("came this far->"+scheduleId);
+        try
         {
-            Id = bus.ScheduleId,
-            Name = bus.Name
-        });
-
-        return finalBuses;
+            var seatHistory = await (from seat in context.ScheduleBusSeats
+                                     join student in context.Students
+                                     on seat.BookedBy equals student.id into studentGroup
+                                     from student in studentGroup.DefaultIfEmpty()
+                                     where seat.ScheduleId == scheduleId
+                                     select new SeatDetailsForAdminDtos
+                                     {
+                                         seatName = seat.SeatName,
+                                         studentName = student != null ? student.Name : "N/A",
+                                         rollNumber = student != null ? student.RollNumber : "N/A",
+                                         registrationNumber = student != null ? student.RegistrationNumber : "N/A",
+                                         phone = student != null ? student.Phone : "N/A",
+                                         departmentName = student != null ? student.DepartmentName : "N/A",
+                                         session = student != null ? student.Session : "N/A"
+                                     }).ToListAsync();
+            return Ok(new { message = "Got seat details for the schedule Bus", list = seatHistory });
+        }
+        catch
+        {
+            return StatusCode(500, new { message = "Internal Server Error!" });
+        }
     }
 
     private async Task<IEnumerable<ScheduleBus>> GetCurrentBusList()

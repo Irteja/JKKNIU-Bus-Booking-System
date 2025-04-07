@@ -7,10 +7,10 @@ public static class CookieHelper
     {
         httpContext.Response.Cookies.Append("JWToken", token, new CookieOptions
         {
-            HttpOnly = true, // Prevent access via JavaScript
-            Secure = true,   // Only send over HTTPS
+            HttpOnly = true, 
+            Secure = true,   
             SameSite = SameSiteMode.Strict,
-            Expires = DateTimeOffset.Now.AddDays(1) // Set expiration time
+            Expires = DateTimeOffset.Now.AddDays(1) 
         });
     }
 
@@ -22,10 +22,10 @@ public static class CookieHelper
     {
         httpContext.Response.Cookies.Delete("JWToken", new CookieOptions
         {
-            HttpOnly = true, // Prevent access via JavaScript
-            Secure = true,   // Only send over HTTPS
+            HttpOnly = true, 
+            Secure = true,  
             SameSite = SameSiteMode.Strict,
-            Expires = DateTimeOffset.Now.AddDays(-1) // Set expiration time to a past date to remove the cookie
+            Expires = DateTimeOffset.Now.AddDays(10) 
         });
     }
 }

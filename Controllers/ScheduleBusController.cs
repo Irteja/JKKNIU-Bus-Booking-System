@@ -140,4 +140,38 @@ public class ScheduleBusController : ControllerBase
 
         return finalBuses;
     }
+
+    [HttpGet("history")]
+    public async Task<ActionResult<IEnumerable<ScheduleBus>>> GetAllBusesTillNow()
+    {
+        try
+        {
+            var allBuses = await context.ScheduleBuses
+                            .OrderByDescending(bus => bus.ScheduledDate)
+                            .ThenBy(bus => bus.StartingAt)
+                            .ToListAsync();
+            return Ok(new { message = "Got all the list", list = allBuses });
+        }
+        catch
+        {
+            return StatusCode(500, new { message = "Internal Server Error!" });
+        }
+    }
+
+    [HttpGet("getschedulebus")]
+    public async Task<ActionResult<IEnumerable<ScheduleBus>>> GetScheduleBus([FromQuery] Guid scheduleId)
+    {
+        try
+        {
+            var scheduleBus = await context.ScheduleBuses.FirstOrDefaultAsync(bus=>
+            bus.ScheduleId==scheduleId
+            );
+            return Ok(new { message = "Schedule Bus info is attached.", data = scheduleBus });
+        }
+        catch
+        {
+            return StatusCode(500, new { message = "Internal Server Error!" });
+        }
+    }
+
 }

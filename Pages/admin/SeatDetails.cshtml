@@ -1,0 +1,106 @@
+@page
+@model JKKNIUBusBookingSystem.Pages.SeatDetailsModel
+@{
+    ViewData["Title"] = "Seat Details";
+}
+
+<h2 id="seatDetailHeader">Seat Details</h2>
+
+<table class="table table-bordered" id="busTable" style="display: none;">
+    <thead>
+        <tr>
+            <th>Seat Name</th>
+            <th>Student Name</th>
+            <th>Student Roll</th>
+            <th>Student Registration Number</th>
+            <th>Phone</th>
+            <th>Department Name</th>
+            <th>Session</th>
+        </tr>
+    </thead>
+    <tbody id="busTableBody"></tbody>
+</table>
+
+<style>
+    .table {
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+
+    .table th,
+    .table td {
+        text-align: center;
+    }
+</style>
+
+
+<script>
+    async function loadSeatDetails() {
+        let scheduleId = "@Model.busScheduleId";
+        try {
+            const response = await fetch(`http://localhost:5134/api/busbooking/seatlistdetailforadmin?scheduleId=${scheduleId}`);
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data);
+            renderBusTable(data.list);
+        } catch (error) {
+            console.error("Error fetching bus history:", error);
+            alert("Failed to load bus history: " + error.message);
+        }
+    }
+
+    async function loadScheduleBus() {
+        let scheduleId = "@Model.busScheduleId";
+        let header=document.getElementById("seatDetailHeader");
+        try {
+            const response = await fetch(`http://localhost:5134/api/schedulebus/getschedulebus?scheduleId=${scheduleId}`);
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            const data = await response.json();
+            const dataBody=data.data;
+            header.innerHTML=`The bus ${dataBody.name} seat details which schedule date is ${dataBody.scheduledDate}`
+            
+        } catch (error) {
+            console.error("Error fetching bus history:", error);
+            alert("Failed to load bus history: " + error.message);
+        }
+    }
+
+    function renderBusTable(buses) {
+        const tbody = document.getElementById("busTableBody");
+        const table = document.getElementById("busTable");
+        tbody.innerHTML = ""; // Clear existing rows
+
+        if (!buses || buses.length === 0) {
+            table.style.display = "none";
+            alert("No bus history found.");
+            return;
+        }
+
+        buses.forEach(bus => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${bus.seatName}</td>
+                <td>${bus.studentName}</td>
+                <td>${bus.rollNumber || "N/A"}</td>
+                <td>${bus.registrationNumber}</td>
+                <td>${bus.phone}</td>
+                <td>${bus.departmentName || "N/A"}</td>
+                <td>${bus.session || "N/A"}</td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+        table.style.display = "table"; // Show table
+    }
+
+    // Load data when the page is fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        loadScheduleBus();
+        loadSeatDetails();
+    });
+</script>
