@@ -4503,11 +4503,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/JKKNIUBusBookingSystem.csproj",
+      "projectUniqueName": "/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/JKKNIUBusBookingSystem.csproj",
       "projectName": "JKKNIUBusBookingSystem",
-      "projectPath": "/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/JKKNIUBusBookingSystem.csproj",
+      "projectPath": "/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/JKKNIUBusBookingSystem.csproj",
       "packagesPath": "/home/irteja/.nuget/packages/",
-      "outputPath": "/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/obj/",
+      "outputPath": "/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/irteja/.nuget/NuGet/NuGet.Config"

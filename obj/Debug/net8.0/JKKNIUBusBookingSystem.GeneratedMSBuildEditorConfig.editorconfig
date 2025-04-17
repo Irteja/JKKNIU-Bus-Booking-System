@@ -17,83 +17,83 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = JKKNIUBusBookingSystem
 build_property.RootNamespace = JKKNIUBusBookingSystem
-build_property.ProjectDir = /media/irteja/New Volume/web project/JKKNIUBusBookingSystem/
+build_property.ProjectDir = /media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /media/irteja/New Volume/web project/JKKNIUBusBookingSystem
+build_property.MSBuildProjectDirectory = /media/irteja/New Volume1/web project/JKKNIUBusBookingSystem
 build_property._RazorSourceGeneratorDebug = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/admin/AddBus.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/admin/AddBus.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvYWRtaW4vQWRkQnVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/admin/AddSchedule.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/admin/AddSchedule.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvYWRtaW4vQWRkU2NoZWR1bGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/admin/BusHistory.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/admin/BusHistory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvYWRtaW4vQnVzSGlzdG9yeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/admin/DeleteSchedule.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/admin/DeleteSchedule.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvYWRtaW4vRGVsZXRlU2NoZWR1bGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/admin/SeatDetails.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/admin/SeatDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvYWRtaW4vU2VhdERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/AvailableBuses.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/AvailableBuses.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXZhaWxhYmxlQnVzZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/BookingHistory.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/BookingHistory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQm9va2luZ0hpc3RvcnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Error.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Index.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Login.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Logout.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Logout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9nb3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Privacy.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/SeatMap.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/SeatMap.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2VhdE1hcC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Shared/_ValidationScriptsPartial.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/signup.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/signup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvc2lnbnVwLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/_ViewImports.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/_ViewStart.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/media/irteja/New Volume/web project/JKKNIUBusBookingSystem/Pages/Shared/_Layout.cshtml]
+[/media/irteja/New Volume1/web project/JKKNIUBusBookingSystem/Pages/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-x7s73bf32j
